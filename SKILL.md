@@ -21,6 +21,7 @@ description: 为「会员订阅 + 付费内容 + 支付」业务完成选型并�
 | 分支 | 取值 | 默认 |
 | --- | --- | --- |
 | 收款方式 | `personal_qr` / `official_gateway` / `hosted_billing` | `personal_qr` |
+| 到账确认（personal_qr） | `amount_fingerprint` / `screenshot_review` / `hybrid` / `aggregation_webhook` | `screenshot_review` |
 | 地区合规 | `cn_mainland` / `overseas` | `cn_mainland` |
 | 技术栈 | `go_next_pg` / `node_next_pg` / `existing_stack` | `go_next_pg` |
 | 部署形态 | `single_host_compose` / `multi_node` / `serverless` | `single_host_compose` |
@@ -68,7 +69,8 @@ description: 为「会员订阅 + 付费内容 + 支付」业务完成选型并�
 
 **按收款方式读取：**
 
-- `personal_qr` → [references/payment-personal-qr.md](references/payment-personal-qr.md)
+- `personal_qr` → [references/payment-confirmation.md](references/payment-confirmation.md)（先读，选确认策略）→
+  [references/payment-personal-qr.md](references/payment-personal-qr.md)（金额指纹实现细节）
 - `official_gateway` / `hosted_billing` → [references/payment-official.md](references/payment-official.md)
 
 只读与当前分支相关的参考，不要把全部内容塞进产出技能。
@@ -95,7 +97,8 @@ description: 为「会员订阅 + 付费内容 + 支付」业务完成选型并�
 1. **目标与非目标**：明确系统边界（例如"不做自动退款、不做物流 API"）。
 2. **分支决策表**：第一步的结论与理由，一两句话一项。
 3. **领域模型与数据表**：按业务范围裁剪后的表、关键字段、唯一索引与状态机。
-4. **支付链路**：金额指纹或网关回调完整流程（创建 → 到账 → 匹配/验签 → 履约），以及退款与兜底（漏单举证）。
+4. **支付链路**：到账确认策略（指纹自动 / 截图凭证审核 / 聚合回调）+ 金额指纹或网关回调完整流程
+   （创建 → 到账 → 匹配/验签 → 履约），以及退款与兜底（漏单举证）。
 5. **里程碑 + 验收标准**：每阶段必须有"可执行的真实验收"（真实数据库端到端冒烟），而不是"编译通过"；
    验收标准必须对齐 **MSP 符合性等级**（Core / Subscriptions / Points / Gifts / Physical），
    并逐条通过 `references/msp/conformance.md` 的**设计判据清单（§3 D-1~D-5）**与测试向量；
@@ -118,8 +121,10 @@ description: 为「会员订阅 + 付费内容 + 支付」业务完成选型并�
 7. **每个阶段以真实数据库端到端冒烟验收**；把验证输出写进文档。
 8. **声明 MSP 符合性等级**：生成的系统必须显式声明实现了哪些等级，并按 `references/msp/conformance.md` 产出符合性报告
    （MUST 与设计判据 D-1~D-5 全部通过才算可用；偏差必须记录）。
-9. **金额指纹是信道受限的自创机制**：只用于 `personal_qr`；必须满足租约独占（INV-27）、超时释放（OP-O5）、
-   退款金额不含尾数（INV-20）、fixed 复用返回既有支付单。
+9. **到账确认策略必须显式选型并逐层满足不变量**（`references/payment-confirmation.md`）：
+   金额指纹只是零摩擦自动化层（租约独占 INV-27、超时释放 OP-O5、尾数不进退款 INV-20）；
+   截图凭证必须 `(channel, transaction_no)` 唯一绑定且歧义一律转人工；
+   聚合/官方回调必须有验签 + 幂等（INV-6/7/18）。
 10. **对齐成熟先例并记录差分**：对象/状态/事件语义对齐 Stripe / Lago / Kill Bill / CloudEvents / IETF（`references/msp/prior-art.md`），
     每个自研或差异点必须有"出处 + 差分 + 测试向量"。
 11. **内核闭环不可改、扩展走注册点**：身份/目录/订单/支付/履约/权益/积分/退款/对账/审计是完备闭环；
@@ -135,6 +140,8 @@ description: 为「会员订阅 + 付费内容 + 支付」业务完成选型并�
 - 阶段划分没有验收标准，或验收标准是"能编译"。
 - 事件重试导致权益重复顺延（发放/续期没有按 source 幂等）。
 - 金额指纹的尾数计入退款金额。
+- 把金额指纹当成个人码唯一方案，不提供截图兜底（监听端挂掉时用户无法完成支付确认）。
+- 截图凭证不校验流水号唯一绑定，或自动通过金额/时间/置信度不达标的歧义凭证。
 - 在核心代码写插件专属分支/`switch`（应使用类型注册表与事件订阅）。
 - 插件直连他人数据表、绕过账本或绕过 Entitlement 判权。
 

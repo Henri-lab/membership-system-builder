@@ -1,5 +1,9 @@
 # 个人收款码支付链路（personal_qr）
 
+> 本文只讲确认策略的 **Tier 0（金额指纹自动确认）**。先读
+> [payment-confirmation.md](payment-confirmation.md) 完成策略选型；截图凭证审核（Tier 1）与
+> 聚合/官方回调（Tier 2/3）分别在各自文档定义。
+
 适用：没有商户号/营业执照，用个人微信或支付宝收款码收款；到账没有订单号，只能靠金额区分。
 
 ## 1. 金额指纹协议
@@ -112,6 +116,9 @@ POST /api/orders/{id}/refund-style claim:
 ```
 
 用户提交后进入 `payment_claims(pending)`；后台审核通过 → 走与自动匹配相同的履约路径（幂等由「订单状态条件更新 + 事件幂等」保证）。
+
+> 本流程已泛化为确认策略 **Tier 1（截图凭证 + OCR + 人工审核）**，含流水号唯一绑定、
+> 歧义转人工与反伪造要求——见 [payment-confirmation.md](payment-confirmation.md) §3。
 
 ## 7. 对账
 
