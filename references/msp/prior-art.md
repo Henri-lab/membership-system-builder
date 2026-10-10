@@ -24,6 +24,11 @@
 | 金额指纹（**自创**） | 无直接先例；最接近银行转账"附言/参考号"匹配 | 因收款码无附言通道，只能用金额当信道——**必须**用最严不变量保护：租约独占（INV-27）、超时释放（OP-O5）、尾数不进退款（INV-20）、fixed 复用返回既有支付单 |
 | 截图凭证 + OCR + 人工审核（确认策略 Tier 1） | 电商「转账后上传凭证」复核；银行对账单凭证核对；Stripe 补单 payment evidence | 流水号唯一绑定 + 歧义转人工 + 审核留痕（`payment-confirmation.md` §3，T-51~T-54） |
 | 聚合服务商回调（确认策略 Tier 2） | 收钱吧/呗等聚合进件；托管式 onboarding（Stripe Connect 的弱化版） | webhook + 验签 + 幂等，核心契约同官方直连，无需自有 ICP 备案（视服务商） |
+| 请求侧节流（v0.4） | Stripe 限流与 429/409 语义 | INV-31/32：并发意图上限 + 撞码退避熔断 |
+| 人工转账回执（v0.4） | 银行转账回执；Stripe Refund 的渠道退款单号 | OP-R3 + INV-33：`(channel, transaction_no)` 唯一且不可变 |
+| 数据保留与删除（v0.4） | PIPL / GDPR 删除权与保留期；财务凭证留存惯例 | INV-34：事实可留、标识可删（`data-retention.md`） |
+| 续费提醒（v0.4） | Stripe smart retries；Recurly dunning | `reminder-contract.md`：窗口幂等键 + 退订隔离 |
+| 账户合并（v0.4） | Auth0 account linking；银行账户合并的余额迁移 | OP-M2 + INV-36：段并集 + 账本 transfer，不可逆 |
 | 部分退款（v0.3） | Stripe Credit Notes / Refund(amount) | `Refund.lines` + Σ ≤ paid + 按行回收（INV-28，T-39/40） |
 | 试用与 proration（v0.3） | Stripe `trial_period_days` + `proration_behavior`；Kill Bill TRIAL phase | OP-T1/T2 试用与转正；OP-M1 三种 proration 行为（T-41~43） |
 | 拒付/争议（v0.3） | Stripe Dispute 状态机 | OP-D1/D2 + 权益 `suspended` + 败诉账本追索（INV-29，T-44~46） |

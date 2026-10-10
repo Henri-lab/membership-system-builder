@@ -1,8 +1,8 @@
 # MSP：会员订阅支付协议标准（Membership & Subscription Protocol）
 
-> 版本：v0.3.0（2026-10-10）｜性质：**规范性协议**（normative），不是某个语言的实现模板。
+> 版本：v0.4.0（2026-10-11）｜性质：**规范性协议**（normative），不是某个语言的实现模板。
 > 作者：henrifox｜上游：<https://github.com/Henri-lab/membership-system-builder>｜许可：MIT（见仓库 LICENSE）
-> 引用本协议请注明：MSP v0.3.0 + 作者 + 上游仓库地址（引用格式见仓库 README「起源与署名」）。
+> 引用本协议请注明：MSP v0.4.0 + 作者 + 上游仓库地址（引用格式见仓库 README「起源与署名」）。
 
 ## 这是什么
 
@@ -44,13 +44,15 @@
 - **对齐成熟先例**：对象/状态/事件语义尽量对齐 Stripe、Lago、Kill Bill、CloudEvents 与 IETF 幂等草案；
   只在无先例处自创（如个人收款码的金额指纹），差异必须在 [prior-art.md](prior-art.md) 中声明。
 
-## 后续候选（v0.4+，欢迎按 [extensions.md](extensions.md) 的加法原则补充）
+## 后续候选（v0.5+，欢迎按 [extensions.md](extensions.md) 的加法原则补充）
 
 | 主题 | 现状 | 补充方向 |
 | --- | --- | --- |
-| 续费提醒与通知契约 | 仅事件层面提及 | 定义提醒时机、渠道降级、用户退出（退订）语义 |
+| 续费提醒与通知契约 | ✅ v0.4 已纳入 | 契约见 `../reminder-contract.md`（时机/幂等键/渠道降级/退订） |
 | 埋点与画像 | 未覆盖 | 定义事件采集最小集与隐私边界 |
-| 账户合并 / 迁移 | 未覆盖 | 定义主体合并时的权益/积分迁移规则 |
+| 账户合并 / 迁移 | ✅ v0.4 已纳入 | 契约见 `../account-merge.md`（段并集/账本转移/不可逆） |
 
 > v0.3 已把"部分退款、试用与 proration、拒付/争议、税务发票、多币种"纳入正文
 > （[spec.md](spec.md) §8 + [conformance.md](conformance.md) T-39~T-50）。
+> v0.4 已把"请求侧节流、人工转账回执、数据保留与删除、续费提醒、账户合并"纳入正文
+> （[spec.md](spec.md) §9 + [conformance.md](conformance.md) T-55~T-64）。

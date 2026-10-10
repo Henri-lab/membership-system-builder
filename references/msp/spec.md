@@ -542,3 +542,15 @@ Dispute: opened → needs_response → under_review → won | lost
 - 一单一种货币不变（INV-20）；任何跨币种结算/退款**必须**携带并持久化 `fx_snapshot`；
 - 折算一律按快照汇率，禁止事后用实时汇率重算；退款一律按订单原币（快照只是换算口径）；
 - 汇率漂移产生的差额 → `adjust` 分录（只追加，禁止改历史）。
+
+## 9. v0.4 主题（2026-10-11，按加法原则追加）
+
+> 本节在既有对象/状态机/操作之上**只做加法**；全部既有语义不变。
+
+| 主题 | 落点 |
+| --- | --- |
+| 请求侧节流 | INV-31（支付意图并发上限）/ INV-32（撞码限速告警）、`TOO_MANY_ATTEMPTS`、T-55/56 |
+| 人工转账回执 | §4.6 OP-R3、INV-33、`refund.transfer_attached`、T-57/58 |
+| 数据保留与删除 | INV-34、T-59/60、[data-retention.md](../data-retention.md) |
+| 续费提醒 | INV-35、T-61/62、[reminder-contract.md](../reminder-contract.md) |
+| 账户合并 | §4.8 OP-M2、INV-36、`account.merged`、T-63/64、[account-merge.md](../account-merge.md) |

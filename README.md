@@ -8,8 +8,8 @@
 <p align="center">
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-blue.svg"></a>
   <img alt="MSP v0.3.0" src="https://img.shields.io/badge/protocol-MSP%20v0.3.0-blueviolet">
-  <img alt="Conformance" src="https://img.shields.io/badge/conformance-T01--T54_%2B_D1--D5-success">
-  <img alt="Version" src="https://img.shields.io/badge/version-v0.4.9-informational">
+  <img alt="Conformance" src="https://img.shields.io/badge/conformance-T01--T64_%2B_D1--D5-success">
+  <img alt="Version" src="https://img.shields.io/badge/version-v0.5.0-informational">
   <img alt="Validate" src="https://github.com/Henri-lab/membership-system-builder/actions/workflows/validate.yml/badge.svg">
   <a href="https://github.com/Henri-lab/membership-system-builder"><img alt="GitHub stars" src="https://img.shields.io/github/stars/Henri-lab/membership-system-builder?style=social"></a>
 </p>
@@ -43,6 +43,9 @@ references/
 ├── plugin-architecture.md  内核闭环 + 插件注入扩展点
 ├── payment-confirmation.md  到账确认策略四层（指纹 / 截图审核 / 聚合回调 / 官方直连）
 ├── payment-personal-qr.md / payment-official.md  两种收款方式的完整链路
+├── data-retention.md        数据保留与删除（三类数据 / 保留期 / 删除权）
+├── reminder-contract.md     续费提醒契约（窗口幂等 + 退订隔离）
+├── account-merge.md         账户合并（段并集 + 账本转移 + 不可逆）
 ├── pitfalls.md / lessons-log.md  真实踩坑与经验账本
 ├── maintenance.md       技能持续进化纪律
 └── design-walkthrough.md / design-judgment.md / master-craft.md  学习资料
@@ -51,7 +54,7 @@ references/
 ## 三个不寻常之处
 
 1. **协议而非模板**：MSP 只规定外部可观察的行为与不变量，不规定表名/框架/中间件；
-   用 54 条测试向量（T-01~T-54）+ 5 条设计判据（D-1~D-5：删表重建/审计/并发同发/重放/回滚）判定「可用」。
+   用 64 条测试向量（T-01~T-64）+ 5 条设计判据（D-1~D-5：删表重建/审计/并发同发/重放/回滚）判定「可用」。
 2. **到账确认策略分层**：无回调场景不靠单一路径——金额指纹自动快车道、截图凭证 OCR/人工审核
    （离线 hook）、聚合服务商与官方回调；每层都有强制不变量与迁移路径。
 3. **持续进化纪律**：`lessons-log.md` 追加经验、`maintenance.md` 决定合并/提升/废弃，技能越用越准。
@@ -61,9 +64,9 @@ references/
 | 维度 | 内容 |
 | --- | --- |
 | 符合性等级 | Core / Subscriptions / Points / Gifts / Physical / Disputes / Invoicing / MultiCurrency |
-| 行为验收 | T-01~T-54 测试向量（并发、重放、退款、争议、发票、多币种……） |
+| 行为验收 | T-01~T-64 测试向量（并发、重放、退款、争议、发票、多币种、合并……） |
 | 设计判据 | D-1~D-5（删表重建 / 审计 / 并发同发 / 重放 / 回滚），跨等级不可豁免 |
-| 不可妥协项 | 11 条（单一判权源、账本唯一事实来源、金额指纹租约独占……） |
+| 不可妥协项 | 12 条（单一判权源、账本唯一事实来源、金额指纹租约独占、个人信息与事实分离……） |
 
 ## 起源与署名
 
