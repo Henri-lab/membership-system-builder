@@ -51,6 +51,7 @@ description: 为「会员订阅 + 付费内容 + 支付」业务完成选型并�
 - [references/msp/events.md](references/msp/events.md) —— 事件信封与必需事件契约
 - [references/msp/extensions.md](references/msp/extensions.md) —— 扩展机制与兼容规则
 - [references/msp/prior-art.md](references/msp/prior-art.md) —— **成熟先例映射**（Stripe / Lago / Kill Bill / CloudEvents / IETF 幂等草案）与差分声明要求
+- [references/data-retention.md](references/data-retention.md) —— **数据保留与删除**（三类数据 / 保留期 / 删除权与只追加账本的共存规则）
 - [references/plugin-architecture.md](references/plugin-architecture.md) —— **内核与插件架构**（完备闭环 + 扩展点目录 + 插件契约；借鉴 Kill Bill / Medusa / Spree / Sylius）
 - [references/architecture.md](references/architecture.md) —— 参考架构、领域划分、不可妥协的设计不变量
 - [references/data-model.md](references/data-model.md) —— 表目录与关键约束（按业务范围裁剪）

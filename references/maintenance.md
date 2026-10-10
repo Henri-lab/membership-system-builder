@@ -114,6 +114,7 @@ platform-kit/skills/membership-system-builder/   # vendored 副本（只随上�
 | v0.4.12 | 2026-10-11 | 新增 `assets/conformance-smoke.sh.tmpl`（T-02/03/04/26/27/33/36/40/52 + D-1 的可执行验收骨架）；conformance §4 与 SKILL.md 产出物链接模板；新增 L-060 |
 | v0.4.13 | 2026-10-11 | spec 新增 INV-31（支付意图并发上限）与 INV-32（撞码限速告警）、错误码 `TOO_MANY_ATTEMPTS`；conformance 新增 T-55/T-56 与 MUST 项；新增 L-061 |
 | v0.4.14 | 2026-10-11 | spec 新增 OP-R3 `attachTransferEvidence`（人工转账回执）与 INV-33；events 新增 `refund.transfer_attached`；data-model 新增 `refund_transfer_evidences`；conformance 新增 T-57/T-58；新增 L-062 |
+| v0.4.15 | 2026-10-11 | 新增 `references/data-retention.md`（三类数据 / 保留期 / 删除权与只追加账本共存 / 删除请求流程 / 隐私红线）；spec 新增 INV-34；conformance 新增 T-59/T-60；SKILL.md 始终读取登记；新增 L-063 |
 
 ## 8. 自检清单（每次改完技能跑一遍）
 
