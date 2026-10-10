@@ -344,3 +344,8 @@
 - 日期：2026-10-11｜来源：设计推理（对齐 Stripe smart retries）｜分支：inapp_reminder / +dunning
 - 结论：提醒任务会重跑、会多实例并发——去重键只写 `(entitlement_id, template_key)` 不够，同一条权益下一轮窗口还要再提醒，必须带 `window_start`；退订提醒是渠道偏好，绝不能连带影响订阅/续费/判权。
 - 为什么＋落地：幂等键 `(principal, entitlement_ref, reminder_key, window_start)`（INV-35）；退订记录 `(principal, channel)` 唯一且可恢复。已落 `references/reminder-contract.md` + T-61/62。
+
+### L-065 账户合并最反直觉的一处：权益段是"并集"不是"相加"
+- 日期：2026-10-11｜来源：设计推理（Fowler 段模型在合并场景的推论）｜分支：+merge
+- 结论：两个账户各剩 1 个月权益，合并后不是 2 个月——重叠时段取并集端点（max 到期），只有不重叠的段才在时间轴上前后相接；积分则走账本成对 transfer 分录，余额永不被直接改。
+- 为什么＋落地：相加会凭空多送时长 = 资损；直接改余额破坏账本可重建性。合并不可逆、历史归属不改写。已落 `references/account-merge.md` + OP-M2 + INV-36 + T-63/64。

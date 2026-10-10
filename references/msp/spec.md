@@ -332,6 +332,23 @@ suspended → revoked（争议败诉追索）
 - 输出：`shipment{status=shipped}`；副作用：写单号与时间、通知用户。 `[EVT] shipment.shipped`
 - 幂等：重复提交相同单号返回相同状态。
 
+### 4.8 账户合并（v0.4，可选）
+
+**OP-M2 `mergePrincipals`**（管理员 + 双因素确认）
+
+- 输入：`operator, source_principal, target_principal, confirmations[], idempotency_key`
+- 前置：source / target 存在且不同；source 无未终结订单/退款/争议/活跃支付意图；双因素确认通过。
+- 输出：`merge{status=merged, mapping}`
+- 副作用（每步幂等，可同事务或逐步收敛）：
+  ① 权益段按 `product_ref` **并集**（重叠取 `max` 到期，永久覆盖限期，禁止相加）；
+  ② 积分账本成对 `transfer` 分录（source 负向 + target 正向）；
+  ③ 礼物所有权转移记录（限量型库存不动）；
+  ④ fixed 金额占用重绑 target（INV-27）；
+  ⑤ source 置 `merged`（禁登录、禁新订单）；
+  ⑥ 审计全量映射（INV-24）。 `[EVT] account.merged`
+- 错误：`NOT_MERGEABLE` / `SELF_MERGE` / `ALREADY_MERGED`
+- 幂等：同 `idempotency_key` 或既有 `(source, target)` 合并记录返回终态，不重复转移。
+
 ## 5. 全局不变量（INV）
 
 实现**必须**满足下列全部规则；这是"符合性判定"的核心。
@@ -376,6 +393,7 @@ suspended → revoked（争议败诉追索）
 - **INV-33（退款凭证唯一与不可变）**（v0.4）人工转账回执 `(channel, transaction_no)` 全局唯一、只追加不可变，同一回执只能绑定一个退款工单；`succeeded` 的退款必须能回答"钱退到哪、谁操作、回执是什么"——个人码 MUST 有转账回执，官方 API SHOULD 有渠道退款单号。
 - **INV-34（个人信息与事实分离）**（v0.4）不可变事实（账本/事件/支付与退款凭证）不得嵌入可识别个人信息；个人信息独立存储且支持掩码/删除；删除个人信息或清零余额（走负向条目）不得破坏账本可重建性（INV-13/14）。
 - **INV-35（提醒幂等与退订隔离）**（v0.4）续费/到期提醒按 `(principal, entitlement_ref, reminder_key, window_start)` 幂等，任务重跑或多实例并发不得重复发送；退订提醒只影响提醒渠道，不得影响订阅状态、续费顺延与权益判权。
+- **INV-36（合并按段并集与账本转移）**（v0.4）账户合并中，权益 = 同 product 段**并集**（重叠取 `max` 到期，永久覆盖限期，禁止简单相加）；积分迁移 = 账本成对 `transfer` 分录（禁止直接改余额）；合并不可逆，source 置 `merged` 后禁登录与新订单；历史归属不可物理改写。
 
 ## 6. 错误模型（最小集合）
 

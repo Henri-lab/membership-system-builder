@@ -13,6 +13,7 @@
 | users | phone/email 至少一个、password_hash、status | `unique(phone)`, `unique(email)` |
 | sessions | user_id、refresh_token_hash、expires_at、revoked_at | 用于登出与吊销 |
 | admin_users | user_id、role | `role in (super_admin, operator, support, finance, content)` |
+| account_merges | source_user_id、target_user_id、status、mapping、operator | `unique(source_user_id) where status='merged'`（不可逆） |
 
 ## 目录
 

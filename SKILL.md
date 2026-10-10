@@ -77,6 +77,7 @@ description: 为「会员订阅 + 付费内容 + 支付」业务完成选型并�
 **按业务分支读取：**
 
 - `inapp_reminder` / `+dunning` → [references/reminder-contract.md](references/reminder-contract.md)
+- `+merge` → [references/account-merge.md](references/account-merge.md)（后置）
 
 只读与当前分支相关的参考，不要把全部内容塞进产出技能。
 

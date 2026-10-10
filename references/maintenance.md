@@ -116,6 +116,7 @@ platform-kit/skills/membership-system-builder/   # vendored 副本（只随上�
 | v0.4.14 | 2026-10-11 | spec 新增 OP-R3 `attachTransferEvidence`（人工转账回执）与 INV-33；events 新增 `refund.transfer_attached`；data-model 新增 `refund_transfer_evidences`；conformance 新增 T-57/T-58；新增 L-062 |
 | v0.4.15 | 2026-10-11 | 新增 `references/data-retention.md`（三类数据 / 保留期 / 删除权与只追加账本共存 / 删除请求流程 / 隐私红线）；spec 新增 INV-34；conformance 新增 T-59/T-60；SKILL.md 始终读取登记；新增 L-063 |
 | v0.4.16 | 2026-10-11 | 新增 `references/reminder-contract.md`（提醒语义分层 / 窗口幂等键 / 渠道降级 / 退订隔离 / 失败重试）；spec 新增 INV-35；events 新增 `reminder.sent/skipped`；data-model 扩展提醒表；conformance 新增 T-61/T-62；新增 L-064 |
+| v0.4.17 | 2026-10-11 | 新增 `references/account-merge.md`（合并语义：段并集 / 账本 transfer / 不可逆）；spec 新增 §4.8 OP-M2 与 INV-36；events 新增 `account.merged`；data-model 新增 `account_merges`；conformance 新增 T-63/T-64；新增 L-065 |
 
 ## 8. 自检清单（每次改完技能跑一遍）
 

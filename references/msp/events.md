@@ -96,6 +96,7 @@
 | `payment.claim_applied` | 用户提交漏单凭证 | `claim_ref, order_ref` |
 | `refund.transfer_attached` | 退款工单关联人工转账回执（v0.4） | `refund_ref, channel, transaction_no, amount_minor, paid_at` |
 | `reminder.sent` / `reminder.skipped` | 到期/续费提醒发送或跳过（v0.4） | `principal, entitlement_ref, reminder_key, window_start, reason` |
+| `account.merged` | 账户合并完成（v0.4） | `source_principal, target_principal, mapping` |
 
 ### 2.6 `dispute.opened` / `dispute.won` / `dispute.lost`（Disputes 等级）
 
@@ -149,6 +150,7 @@
 | OP-R1 `applyRefund` | `refund.applied` |
 | OP-R2 `reviewRefund`（通过） | `refund.succeeded` |
 | OP-R3 `attachTransferEvidence` | `refund.transfer_attached` |
+| OP-M2 `mergePrincipals` | `account.merged` |
 | OP-S1 `shipOrder` | `shipment.shipped` |
 | OP-T1 `startTrial` | `subscription.trial_started` |
 | OP-M1 `changeOffer` | `subscription.offer_changed` |
