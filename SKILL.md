@@ -102,6 +102,7 @@ description: 为「会员订阅 + 付费内容 + 支付」业务完成选型并�
 5. **里程碑 + 验收标准**：每阶段必须有"可执行的真实验收"（真实数据库端到端冒烟），而不是"编译通过"；
    验收标准必须对齐 **MSP 符合性等级**（Core / Subscriptions / Points / Gifts / Physical），
    并逐条通过 `references/msp/conformance.md` 的**设计判据清单（§3 D-1~D-5）**与测试向量；
+   可从 [assets/conformance-smoke.sh.tmpl](assets/conformance-smoke.sh.tmpl) 复制可执行验收骨架（按本项目端点/鉴权调整）；
    对每个与成熟参考不同的语义，给出差分用例（`references/msp/prior-art.md` §3）。
 6. **踩坑清单**：从 `pitfalls.md` 挑选与本分支相关的条目（至少覆盖支付与幂等两类）。
 7. **运维手册**：部署方式、备份、对账命令、密钥轮换、常见故障定位。

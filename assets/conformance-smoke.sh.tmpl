@@ -1,0 +1,149 @@
+#!/usr/bin/env bash
+# MSP 符合性冒烟模板（conformance-smoke.sh.tmpl）
+#
+# 用途：把 conformance.md 的测试向量里「每个声明等级都必须过」的关键子集，做成可执行骨架。
+# 用法：生成项目时复制为 scripts/smoke-conformance.sh，按实际端点/鉴权调整下方 ENV 与
+#       各用例中的请求路径；跑完把输出作为符合性报告的附录。
+#
+# 依赖：curl、jq、psql（D-1 对账用）。
+# 注意：本模板以「生成技能约定的 API 形状」为默认值，路径与字段名按项目实现调整。
+
+set -u
+
+BASE_URL="${BASE_URL:-http://127.0.0.1:8080}"
+USER_TOKEN="${USER_TOKEN:-}"      # 普通用户 token（下单/补单/上传凭证）
+ADMIN_TOKEN="${ADMIN_TOKEN:-}"    # 管理员 token（审核凭证/人工补单）
+DB_URL="${DB_URL:-postgresql://app:app@127.0.0.1:15432/app}"
+
+OFFER_REF="${OFFER_REF:-offer-basic}"   # 测试用报价
+PRINCIPAL="${PRINCIPAL:-user-test}"     # 测试主体
+
+PASS=0
+FAIL=0
+
+say()  { printf '%s\n' "$*"; }
+api()  { curl -sS -m 10 -H "Authorization: Bearer ${USER_TOKEN:-$ADMIN_TOKEN}" "$@"; }
+admin() { curl -sS -m 10 -H "Authorization: Bearer $ADMIN_TOKEN" "$@"; }
+sql()  { psql "$DB_URL" -Atqc "$1"; }
+
+run_case() { # run_case <ID> <描述> <函数名>
+  if "$3"; then
+    PASS=$((PASS + 1)); printf '✅ %s %s\n' "$1" "$2"
+  else
+    FAIL=$((FAIL + 1)); printf '❌ %s %s\n' "$1" "$2"
+  fi
+}
+
+# ---- 上报结算（实现方按 OP-P2 的签名格式替换本函数）----
+# 输入：金额(分) 渠道；输出：服务端返回的 JSON
+notify_settlement() {
+  # 占位：真实实现需要 device_id/nonce/timestamp/signature 签名串
+  api -X POST "$BASE_URL/internal/payment-notifications" \
+      -H 'Content-Type: application/json' \
+      -d "{\"channel\":\"${2:-wechat}\",\"amount_cents\":$1,\"paid_at\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"}"
+}
+
+case_t02() { # 正常支付 → 履约
+  local order pay amount r order_ref status
+  order=$(api -X POST "$BASE_URL/api/orders" -H 'Content-Type: application/json' \
+          -d "{\"offer_ref\":\"$OFFER_REF\"}") || return 1
+  order_ref=$(printf '%s' "$order" | jq -r '.order_ref')
+  pay=$(api -X POST "$BASE_URL/api/payments/intents" -H 'Content-Type: application/json' \
+        -d "{\"order_ref\":\"$order_ref\"}") || return 1
+  amount=$(printf '%s' "$pay" | jq -r '.amount')
+  r=$(notify_settlement "$amount" wechat) || return 1
+  status=$(api "$BASE_URL/api/orders/$order_ref" | jq -r '.status')
+  [ "$status" = "paid" ] && printf '%s' "$r" | jq -e '.result == "matched"' >/dev/null
+}
+
+case_t03() { # 重复上报幂等
+  local amount
+  amount=$(admin "$BASE_URL/admin/orders/latest" | jq -r '.paid_amount') 2>/dev/null || return 1
+  r=$(notify_settlement "$amount" wechat) || return 1
+  printf '%s' "$r" | jq -e '.result == "duplicate"' >/dev/null
+}
+
+case_t04() { # 金额不符 → unmatched，不动订单
+  r=$(notify_settlement 1 wechat) || return 1
+  printf '%s' "$r" | jq -e '.result == "unmatched"' >/dev/null
+}
+
+case_t26() { # 并发扣减：余额 100，10 个并发各扣 100，恰好 1 次成功
+  # 实现方：把充值/扣减端点与主体参数替换为实际接口
+  local i ok=0
+  for i in $(seq 1 10); do
+    api -X POST "$BASE_URL/api/points/redeem" -H 'Content-Type: application/json' \
+        -d "{\"principal\":\"$PRINCIPAL\",\"amount_minor\":100}" >"/tmp/msp-t26-$i.out" &
+  done
+  wait
+  for i in $(seq 1 10); do
+    grep -q '"status":"ok"' "/tmp/msp-t26-$i.out" && ok=$((ok + 1))
+    rm -f "/tmp/msp-t26-$i.out"
+  done
+  [ "$ok" -eq 1 ]
+}
+
+case_t27() { # 同一事件重放：账本仍只有 1 条入账
+  # 实现方：取最近一条 order.paid 事件，向内部重放端点投递 3 次
+  local n
+  n=$(sql "select count(*) from points_ledger where source like 'event:%' and principal='$PRINCIPAL'")
+  [ "$n" = "1" ]
+}
+
+case_t33() { # 超时关单：占用释放，同一金额可被再次签发
+  # 实现方：把测试订单 expires_at 改到过去，再调用关单任务端点
+  sql "update orders set expires_at = now() - interval '1 minute' where status='pending' and principal='$PRINCIPAL'"
+  api -X POST "$BASE_URL/admin/orders/close-expired" >/dev/null
+  sql "select count(*) from payment_amount_reservations where status='active' and order_id is null" | grep -qv '^0$'
+}
+
+case_t36() { # 指纹退款：退款金额 = payable_amount，不含尾数
+  local order paid refund
+  order=$(api "$BASE_URL/api/orders/latest" | jq -r '.order_ref') 2>/dev/null || return 1
+  paid=$(api "$BASE_URL/api/orders/$order" | jq -r '.payable_amount')
+  refund=$(admin -X POST "$BASE_URL/admin/orders/$order/refunds" -H 'Content-Type: application/json' \
+           -d '{}' | jq -r '.amount') 2>/dev/null || return 1
+  [ "$refund" = "$paid" ]
+}
+
+case_t40() { # 部分退款超额 → REFUND_EXCEEDED
+  r=$(admin -X POST "$BASE_URL/admin/orders/latest/refunds" -H 'Content-Type: application/json' \
+      -d '{"amount_minor":999999999}') 2>/dev/null || return 1
+  printf '%s' "$r" | jq -e '.error == "REFUND_EXCEEDED"' >/dev/null
+}
+
+case_t52() { # 截图凭证：同一流水号重复上传 → duplicate
+  local r
+  r=$(api -X POST "$BASE_URL/api/orders/latest/payment-evidence" -H 'Content-Type: application/json' \
+      -d '{"channel":"wechat","transaction_no":"SAME-TXN-001","amount_cents":1,"paid_at":"2026-10-11T00:00:00Z"}')
+  r=$(api -X POST "$BASE_URL/api/orders/latest/payment-evidence" -H 'Content-Type: application/json' \
+      -d '{"channel":"wechat","transaction_no":"SAME-TXN-001","amount_cents":1,"paid_at":"2026-10-11T00:00:00Z"}')
+  printf '%s' "$r" | jq -e '.status == "duplicate" or .error == "DUPLICATE"' >/dev/null
+}
+
+case_d01() { # 设计判据 D-1：余额可由账本重建（对账不变量）
+  sql "select (select coalesce(sum(delta),0) from points_ledger where principal='$PRINCIPAL') = (select coalesce(balance,0) from point_balances where principal='$PRINCIPAL')" | grep -q '^t$'
+}
+
+say "== MSP conformance smoke =="
+say "BASE_URL=$BASE_URL"
+
+run_case T-02 "正常支付履约" case_t02
+run_case T-03 "重复上报幂等" case_t03
+run_case T-04 "金额不符 unmatched" case_t04
+run_case T-26 "并发扣减仅一次成功" case_t26
+run_case T-27 "事件重放不重复入账" case_t27
+run_case T-33 "超时关单释放占用" case_t33
+run_case T-36 "退款不含指纹尾数" case_t36
+run_case T-40 "部分退款超额拒绝" case_t40
+run_case T-52 "凭证流水号唯一" case_t52
+run_case D-01 "余额可由账本重建" case_d01
+
+say ""
+say "通过 $PASS / 失败 $FAIL"
+if [ "$FAIL" -eq 0 ]; then
+  say "关键子集全过——把本输出作为符合性报告附录；完整等级仍需跑 conformance.md 全部向量。"
+else
+  say "存在失败用例，修复后重跑；不得降低声明等级静默忽略。"
+  exit 1
+fi

@@ -111,6 +111,7 @@ platform-kit/skills/membership-system-builder/   # vendored 副本（只随上�
 | v0.4.9 | 2026-10-11 | README 现代化（badges + 质量门禁 + 起源与署名 + 引用格式）；新增 `AUTHORS.md`；msp/README 加作者/上游/许可行；SKILL.md 测试向量计数更正为 54；新增 L-059 |
 | v0.4.10 | 2026-10-11 | SKILL.md `description` 扩展触发面：新增「符合性审计 / 支付链路设计评审 / 协议答疑」用途与截图凭证审核、聚合服务商等新分支 |
 | v0.4.11 | 2026-10-11 | 新增 GitHub Actions 校验工作流（frontmatter / 内部链接 / L 编号唯一 / T 编号唯一连续 / agents 描述长度 / 待办标记扫描）与 `scripts/validate_skill.py`；README 加 CI badge |
+| v0.4.12 | 2026-10-11 | 新增 `assets/conformance-smoke.sh.tmpl`（T-02/03/04/26/27/33/36/40/52 + D-1 的可执行验收骨架）；conformance §4 与 SKILL.md 产出物链接模板；新增 L-060 |
 
 ## 8. 自检清单（每次改完技能跑一遍）
 
