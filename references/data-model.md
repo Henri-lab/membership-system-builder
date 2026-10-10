@@ -47,6 +47,7 @@
 | payment_notifications | provider、nonce、amount_cents、status、matched_* | `unique(provider, nonce)` 防重放 |
 | payment_claims | order_id、user_id、金额、凭证、status | 漏单兜底工单 |
 | refunds | refund_no、order_id、amount_cents、status、review_note | `unique(order_id) where status in ('applied','approved','processing')` |
+| refund_transfer_evidences | refund_id、channel、transaction_no、amount_cents、paid_at、evidence_urls、reviewer | `unique(channel, transaction_no)` 防回执复用；只追加不可变 |
 
 ## 权益
 

@@ -294,6 +294,17 @@ suspended → revoked（争议败诉追索）
 - 退款金额：MUST 等于订单 `payable_amount`；金额指纹的尾数不得计入（INV-20）。
 - 幂等：重复审核返回终态；`reject` 后同订单**允许**重新申请（实现需在文档中声明该策略）。
 
+**OP-R3 `attachTransferEvidence`**（管理员/运营，人工转账回执，v0.4）
+
+- 输入：`operator, refund_ref, channel, transaction_no, amount_minor, paid_at, evidence_urls[], note?`
+- 前置：工单存在且状态允许（`applied|processing|succeeded`）；`(channel, transaction_no)` 未被其它工单使用。
+- 输出：`transfer_evidence{evidence_ref, status=attached}`
+- 副作用：写入**不可变**回执记录 + 审计（actor + reason + 时间）。不改变退款工单的状态机。 `[EVT] refund.transfer_attached`
+- 错误：`REFUND_NOT_FOUND` / `DUPLICATE_EVIDENCE` / `NOT_ATTACHABLE`
+- 幂等：同 `(refund_ref, transaction_no)` 重复提交返回既有凭证记录，不新增。
+- 资金通道差异：**个人收款码退款 MUST 在工单 `succeeded` 前/时关联至少一条转账回执**；
+  官方 API 退款 SHOULD 用渠道退款单号（`provider_ref`）代替，并记录在工单上（INV-33）。
+
 ### 4.7 履约与发货（内部）
 
 **OP-F1 `dispatchOnPaid`**（事件消费者）
@@ -362,6 +373,7 @@ suspended → revoked（争议败诉追索）
 - **INV-30（跨币种快照）** 跨币种资金变动必须引用不可变汇率快照；退款币种 = 订单币种；汇率差额走 `adjust` 分录。
 - **INV-31（支付意图并发上限）**（v0.4）同一 `principal` 对同一订单的重复/并发 `createPaymentIntent` 必须返回同一个未过期支付单；同一 `principal` 的活跃支付意图总数有实现声明的上限（默认 ≤5），超出返回 `TOO_MANY_ATTEMPTS` 且无副作用。
 - **INV-32（撞码限速与告警）**（v0.4）金额指纹签发失败（`AMOUNT_UNAVAILABLE`）必须退避重试并记录告警；同一 `principal` 高频撞码失败触发熔断（快速失败 + 告警），不得无限空转。
+- **INV-33（退款凭证唯一与不可变）**（v0.4）人工转账回执 `(channel, transaction_no)` 全局唯一、只追加不可变，同一回执只能绑定一个退款工单；`succeeded` 的退款必须能回答"钱退到哪、谁操作、回执是什么"——个人码 MUST 有转账回执，官方 API SHOULD 有渠道退款单号。
 
 ## 6. 错误模型（最小集合）
 

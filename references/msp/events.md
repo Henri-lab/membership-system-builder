@@ -94,6 +94,7 @@
 | `points.credited` / `points.debited` | 积分变动 | `principal, delta, kind, balance_after` |
 | `shipment.created` / `shipment.shipped` | 周边履约 | `shipment_ref, order_ref, status` |
 | `payment.claim_applied` | 用户提交漏单凭证 | `claim_ref, order_ref` |
+| `refund.transfer_attached` | 退款工单关联人工转账回执（v0.4） | `refund_ref, channel, transaction_no, amount_minor, paid_at` |
 
 ### 2.6 `dispute.opened` / `dispute.won` / `dispute.lost`（Disputes 等级）
 
@@ -146,6 +147,7 @@
 | OP-N5 `redeemWithPoints` | `order.paid` |
 | OP-R1 `applyRefund` | `refund.applied` |
 | OP-R2 `reviewRefund`（通过） | `refund.succeeded` |
+| OP-R3 `attachTransferEvidence` | `refund.transfer_attached` |
 | OP-S1 `shipOrder` | `shipment.shipped` |
 | OP-T1 `startTrial` | `subscription.trial_started` |
 | OP-M1 `changeOffer` | `subscription.offer_changed` |
