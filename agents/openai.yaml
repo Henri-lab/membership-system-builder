@@ -1,0 +1,4 @@
+interface:
+  display_name: "订阅会员支付系统构建器"
+  short_description: "选型分支后生成一份可执行的会员订阅支付系统构建技能"
+  default_prompt: "Use $membership-system-builder to 确认选型分支并生成一份可执行的订阅会员支付系统构建技能。"
