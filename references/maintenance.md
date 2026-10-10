@@ -107,6 +107,7 @@ platform-kit/skills/membership-system-builder/   # vendored 副本（只随上�
 | v0.4.5 | 2026-10-11 | `msp/conformance.md` 新增 §3 设计判据清单（D-1~D-5：删表重建/审计/并发同发/重放/回滚），跨等级必检且不可豁免；判定规则与章节号同步；SKILL.md 产出物与不可妥协项要求 D-1~D-5；新增 L-055 |
 | v0.4.6 | 2026-10-11 | 技能独立为上游开源仓库（Henri-lab/membership-system-builder）；`platform-kit/skills/` 降级为 vendored 副本，§7 同步方向反转；L-054 隐私脱敏（移除服务器属地与域名细节）；新增 L-056 |
 | v0.4.7 | 2026-10-11 | 新增 `references/payment-confirmation.md`（到账确认策略四层：金额指纹/截图凭证审核/聚合回调/官方直连 + 选型规则 + 各层不变量 + 迁移路径）；SKILL.md 新增「到账确认」分支（默认 `screenshot_review`）；conformance 新增 T-51~T-54；新增 L-057 |
+| v0.4.8 | 2026-10-11 | `payment-confirmation.md` 新增 §3.5「实现要点（实战）」六条（两段式上传/内容嗅探/key 即权限/blob 预览/限额双保险/复用唯一写入口）；新增 L-058 |
 
 ## 8. 自检清单（每次改完技能跑一遍）
 

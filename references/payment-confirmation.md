@@ -91,6 +91,26 @@ create unique index uq_evidence_txn on payment_evidences (channel, transaction_n
 - 单量大：接 Tier 2/3 回调做权威核对，截图降级为兜底。
 - 底线认知：截图永远不是"渠道权威"，它是**离线 hook**；只要伪造开始有利可图，就必须向 Tier 2/3 迁移。
 
+### 3.5 实现要点（实战）
+
+来自一次真实落地（个人码 + 截图审核主链，含端到端验收）——流程好设计，坑都在这六处：
+
+1. **两段式提交**：截图先上传拿到**站内相对地址**，再随凭证提交进 `evidence_urls`；
+   不要做成"填截图外链"——用户没有图床，外链还绕过了你自己的权限与事后审计。
+2. **类型按内容嗅探**：用前 512 字节（如 `http.DetectContentType`）决定扩展名与 MIME，
+   **绝不信任文件名与客户端 `Content-Type`**，否则能把 HTML 伪装成 `.png` 存进来。
+3. **key 即权限**：存储 key 用 `claims/<userID>/<yyyymmdd>/<random>.<ext>`——路径前缀本身就是归属声明，
+   读取时按前缀判 owner、管理员放行，同时统一 `path.Clean` + 拒绝 `..` 做防穿越。
+4. **预览不开公开地址**：站内凭证用带 `Authorization` 的 fetch 拉成 blob 给 `<img>`，
+   不引入公开 URL、也不需要签名地址；用户自己的预览用本地 objectURL，不必回传服务器。
+5. **限额双保险**：请求侧 `MaxBytesReader` + 读取侧 `LimitReader(上限+1)`，
+   错误码分层（413 过大 / 415 类型 / 403 越权 / 404 不存在），前端才能给出可读提示。
+6. **审核复用唯一写入口**：`approve` 直接走既有凭证审核（订单转 paid → `order.paid` → outbox 异步发权益），
+   不新增第二条履约路径。金额指纹**保留**——它是审核时的防撞码（同窗口内多单金额互不相同），不是监听端的专属。
+
+AI 预审的落点很小：凭证表加 JSONB `ai_review` + 一个异步 worker + 可替换的 `VisionProvider` 接口
+（key 走环境变量）；默认**只写建议**（建议值 + 置信度），阈值开关跑稳后再放开自动通过。
+
 ## 4. Tier 0 金额指纹（自动快车道）
 
 实现细节全部在 [payment-personal-qr.md](payment-personal-qr.md)。在本分层里它承担：自动命中 → 直接履约；
