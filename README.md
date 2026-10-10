@@ -13,10 +13,11 @@
 
 ```bash
 mkdir -p ~/.codex/skills
-git clone <本仓库> ~/.codex/skills/membership-system-builder
+git clone https://github.com/Henri-lab/membership-system-builder.git ~/.codex/skills/membership-system-builder
 ```
 
 之后在任意 Codex 会话中按 skill 名（`membership-system-builder`）触发即可。
+本仓库是该技能的唯一上游；历史项目 `platform-kit` 内保留的 `skills/membership-system-builder/` 是 vendored 副本，改动只在本仓库进行。
 
 ## 目录
 

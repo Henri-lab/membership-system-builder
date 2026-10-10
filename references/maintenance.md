@@ -66,22 +66,24 @@
 
 ## 7. 同步与版本
 
-**唯一事实来源：`platform-kit` 仓库的 `skills/membership-system-builder/`**（已纳入 git）。
+**唯一上游：独立开源仓库 [Henri-lab/membership-system-builder](https://github.com/Henri-lab/membership-system-builder)**（2026-10-11 自 `platform-kit` 独立）。
 
-三个位置的关系与同步方向：
+三个位置的关系与同步方向（**上游 → 下游，单向**）：
 
 ```
-platform-kit/skills/membership-system-builder/   # 源（git 版本化，唯一权威）
-        │  cp -R
+Henri-lab/membership-system-builder/             # 源（唯一上游，git 版本化）
+        │  rsync -a --delete（同步后在 platform-kit 提交 vendored 副本）
+        ▼
+platform-kit/skills/membership-system-builder/   # vendored 副本（只随上游同步，禁止直接改）
+        │  rsync -a --delete
         ▼
 ~/.codex/skills/membership-system-builder/       # 安装副本（agent 实际加载的）
-        │  需要时复制
-        ▼
-项目工作区中的临时副本（如 x20-v-b/agent-skills/） # 可选，禁止在此直接改
 ```
 
-- 改动流程：改源 → 提交 → 覆盖安装副本（`rm -rf ~/.codex/skills/membership-system-builder && cp -R <repo>/skills/membership-system-builder ~/.codex/skills/`）；
-- **不要在工作区临时副本上直接编辑**，否则会出现三个版本互相漂移；
+- 改动流程：改上游 → 提交并 push → 同步 vendored 副本
+  （`rsync -a --delete <上游>/ <platform-kit>/skills/membership-system-builder/`）并在 platform-kit 提交 →
+  同步安装副本（`rsync -a --delete <上游>/ ~/.codex/skills/membership-system-builder/`）；
+- **不要在任何副本上直接编辑**（vendored / 安装副本 / 项目工作区临时副本），否则会出现多版本漂移；
 - 每次结构变化写一条变更记录：
 
 | 版本 | 日期 | 变更 |
@@ -103,6 +105,7 @@ platform-kit/skills/membership-system-builder/   # 源（git 版本化，唯一�
 | v0.4.3 | 2026-10-11 | 新增 `references/master-craft.md`（老师傅隐形知识：10 篇权威判据出处与原话、5 个评审测试、新手直觉 vs 老师傅对照表）；SKILL.md 学习资料登记；prior-art.md 加理论源头指针；新增 L-053 |
 | v0.4.4 | 2026-10-11 | `payment-official.md` 新增「接入官方回调的前置条件（中国大陆）」：三条路径门槛对比、备案/属地/后缀核查方法、代码侧改造清单；新增 L-054（官方回调门槛是资质+备案，不是代码） |
 | v0.4.5 | 2026-10-11 | `msp/conformance.md` 新增 §3 设计判据清单（D-1~D-5：删表重建/审计/并发同发/重放/回滚），跨等级必检且不可豁免；判定规则与章节号同步；SKILL.md 产出物与不可妥协项要求 D-1~D-5；新增 L-055 |
+| v0.4.6 | 2026-10-11 | 技能独立为上游开源仓库（Henri-lab/membership-system-builder）；`platform-kit/skills/` 降级为 vendored 副本，§7 同步方向反转；L-054 隐私脱敏（移除服务器属地与域名细节）；新增 L-056 |
 
 ## 8. 自检清单（每次改完技能跑一遍）
 
