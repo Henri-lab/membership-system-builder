@@ -339,3 +339,8 @@
 - 日期：2026-10-11｜来源：设计推理（PIPL/GDPR 与 INV-14 的对齐）｜分支：任意
 - 结论：把"不可变"与"删除权"硬碰硬是死局；解法是分类——账本/凭证只存匿名引用与金额，不存 PII；个人信息单独存、可掩码可删；余额清零走账本负向条目而不是 DELETE。
 - 为什么＋落地：结果 = 个人信息删了，审计链（谁、何时、多少钱）仍完整。已落 `references/data-retention.md` + INV-34 + T-59/60（事实表 PII 扫描）。
+
+### L-064 提醒的去重键要带"窗口"，退订只影响提醒不影响订阅
+- 日期：2026-10-11｜来源：设计推理（对齐 Stripe smart retries）｜分支：inapp_reminder / +dunning
+- 结论：提醒任务会重跑、会多实例并发——去重键只写 `(entitlement_id, template_key)` 不够，同一条权益下一轮窗口还要再提醒，必须带 `window_start`；退订提醒是渠道偏好，绝不能连带影响订阅/续费/判权。
+- 为什么＋落地：幂等键 `(principal, entitlement_ref, reminder_key, window_start)`（INV-35）；退订记录 `(principal, channel)` 唯一且可恢复。已落 `references/reminder-contract.md` + T-61/62。

@@ -95,6 +95,7 @@
 | `shipment.created` / `shipment.shipped` | 周边履约 | `shipment_ref, order_ref, status` |
 | `payment.claim_applied` | 用户提交漏单凭证 | `claim_ref, order_ref` |
 | `refund.transfer_attached` | 退款工单关联人工转账回执（v0.4） | `refund_ref, channel, transaction_no, amount_minor, paid_at` |
+| `reminder.sent` / `reminder.skipped` | 到期/续费提醒发送或跳过（v0.4） | `principal, entitlement_ref, reminder_key, window_start, reason` |
 
 ### 2.6 `dispute.opened` / `dispute.won` / `dispute.lost`（Disputes 等级）
 

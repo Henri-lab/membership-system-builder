@@ -56,7 +56,8 @@
 | entitlements | user_id、product_id、source_type、scope、starts_at、expires_at、status | `unique(user_id, product_id) where status='active'` |
 | entitlement_logs | action（grant/renew/expire/revoke/extend）、actor、快照 | 审计 |
 | memberships | user_id、offer_id、period_start/end、auto_renew | 收款码阶段 `auto_renew=false` |
-| entitlement_reminders | (entitlement_id, template_key) | 主键去重，多实例安全 |
+| entitlement_reminders | entitlement_id、template_key、window_start | `unique(entitlement_id, template_key, window_start)` 去重，多实例安全 |
+| reminder_unsubscribes | user_id、channel、unsubscribed_at、resubscribed_at | `unique(user_id, channel)`；只影响提醒，不影响订阅（INV-35） |
 
 续期算法（写进 SQL，不要在应用层拼时间）：
 

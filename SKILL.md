@@ -74,6 +74,10 @@ description: 为「会员订阅 + 付费内容 + 支付」业务完成选型并�
   [references/payment-personal-qr.md](references/payment-personal-qr.md)（金额指纹实现细节）
 - `official_gateway` / `hosted_billing` → [references/payment-official.md](references/payment-official.md)
 
+**按业务分支读取：**
+
+- `inapp_reminder` / `+dunning` → [references/reminder-contract.md](references/reminder-contract.md)
+
 只读与当前分支相关的参考，不要把全部内容塞进产出技能。
 
 ## 第三步：生成构建技能

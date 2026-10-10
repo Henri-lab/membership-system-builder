@@ -48,6 +48,8 @@
 - [ ] INV-26 发放/续期按 source 幂等：同一 `order.paid` 重放不再次顺延
 - [ ] 试用：`trialing → expired` 实时生效；转正不丢剩余试用（T-41/T-42）
 - [ ] proration：`changeOffer` 三种行为，补差走订单/账本（T-43）
+- [ ] INV-35 提醒幂等：同窗口重跑提醒任务只发一次（T-61，inapp_reminder/+dunning）
+- [ ] 退订隔离：退订提醒不影响订阅/续费/判权（T-62，inapp_reminder/+dunning）
 - [ ] INV-10 实时到期：把到期时间改为过去后，下一次访问立即被拒
 - [ ] OP-E1 `checkAccess` 覆盖 product/members 两种门控语义
 - [ ] INV-22 权限隔离：非本人订单/权益访问返回 FORBIDDEN 且无副作用
@@ -161,6 +163,8 @@
 | T-58 | 无转账回执的退款审核（Core，personal_qr） | 审核通过被拒或强制转人工；工单不得 `succeeded`（INV-33） |
 | T-59 | 删除个人信息请求（Core） | PII 掩码或删除；余额/权益清零走账本负向条目与段回收；账本历史仍在且 `balance == Σ delta` |
 | T-60 | 事实表 PII 扫描（Core） | 账本/事件/凭证表无手机号/邮箱/姓名明文；文档与示例数据已脱敏 |
+| T-61 | 同窗口重复跑提醒任务（Subscriptions） | `(principal, entitlement_ref, reminder_key, window)` 幂等：只发送一次，多实例并发不重复 |
+| T-62 | 退订提醒（Subscriptions） | 退订后不再发提醒；订阅状态、续费顺延与判权不受影响；可重新订阅 |
 
 ## 5. 判定规则
 
