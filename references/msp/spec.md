@@ -360,6 +360,8 @@ suspended → revoked（争议败诉追索）
 - **INV-28（退款上限）** 同一订单累计成功退款金额 ≤ `paid_amount`；部分退款按行回收，行内按金额占比折算段/积分/礼物。
 - **INV-29（争议冻结范围）** 争议冻结只作用于该订单贡献的权益段；`won` 恢复、`lost` 追索都必须留审计与账本痕迹。
 - **INV-30（跨币种快照）** 跨币种资金变动必须引用不可变汇率快照；退款币种 = 订单币种；汇率差额走 `adjust` 分录。
+- **INV-31（支付意图并发上限）**（v0.4）同一 `principal` 对同一订单的重复/并发 `createPaymentIntent` 必须返回同一个未过期支付单；同一 `principal` 的活跃支付意图总数有实现声明的上限（默认 ≤5），超出返回 `TOO_MANY_ATTEMPTS` 且无副作用。
+- **INV-32（撞码限速与告警）**（v0.4）金额指纹签发失败（`AMOUNT_UNAVAILABLE`）必须退避重试并记录告警；同一 `principal` 高频撞码失败触发熔断（快速失败 + 告警），不得无限空转。
 
 ## 6. 错误模型（最小集合）
 
@@ -373,6 +375,7 @@ suspended → revoked（争议败诉追索）
 | `NOT_PAYABLE` / `NOT_CANCELABLE` / `NOT_REDEEMABLE` / `NOT_REVIEWABLE` | 前置不满足 | 无副作用 |
 | `INSUFFICIENT_POINTS` / `INSUFFICIENT_BALANCE` | 余额不足 | 无副作用 |
 | `AMOUNT_UNAVAILABLE` | 金额指纹空间耗尽 | 无副作用 |
+| `TOO_MANY_ATTEMPTS` | 活跃支付意图超上限 / 高频撞码熔断 | 无副作用 |
 | `INVALID_SIGNATURE` / `TIMESTAMP_OUT_OF_WINDOW` | 回调不可信 | 无副作用 |
 | `MANUAL_REQUIRED` | 需人工处理（退款冲销失败等） | 仅记录状态，不产生资金副作用 |
 | `REFUND_EXCEEDED` / `TRIAL_USED` / `NOT_TRIALABLE` / `DISPUTE_EXISTS` / `NOT_DISPUTABLE` | 前置不满足（v0.3） | 无副作用 |
