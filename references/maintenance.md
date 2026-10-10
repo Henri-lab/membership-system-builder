@@ -110,12 +110,13 @@ platform-kit/skills/membership-system-builder/   # vendored 副本（只随上�
 | v0.4.8 | 2026-10-11 | `payment-confirmation.md` 新增 §3.5「实现要点（实战）」六条（两段式上传/内容嗅探/key 即权限/blob 预览/限额双保险/复用唯一写入口）；新增 L-058 |
 | v0.4.9 | 2026-10-11 | README 现代化（badges + 质量门禁 + 起源与署名 + 引用格式）；新增 `AUTHORS.md`；msp/README 加作者/上游/许可行；SKILL.md 测试向量计数更正为 54；新增 L-059 |
 | v0.4.10 | 2026-10-11 | SKILL.md `description` 扩展触发面：新增「符合性审计 / 支付链路设计评审 / 协议答疑」用途与截图凭证审核、聚合服务商等新分支 |
+| v0.4.11 | 2026-10-11 | 新增 GitHub Actions 校验工作流（frontmatter / 内部链接 / L 编号唯一 / T 编号唯一连续 / agents 描述长度 / 待办标记扫描）与 `scripts/validate_skill.py`；README 加 CI badge |
 
 ## 8. 自检清单（每次改完技能跑一遍）
 
 1. frontmatter 的 `name` 与目录名一致、`description` 仍能区分适用场景；
 2. `SKILL.md` 里引用的每个文件都存在，且路由描述与实际内容一致；
-3. 没有 TODO/占位符；
+3. 没有未完成的待办标记；
 4. `agents/openai.yaml` 的 `short_description` 在 25~64 字符之间；
 5. 新增条目遵守格式、已去重、未包含机密；
 6. 工作区副本已同步到 `~/.codex/skills/`。
