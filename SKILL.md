@@ -47,7 +47,7 @@ description: 为「会员订阅 + 付费内容 + 支付」业务完成选型并�
 - [references/msp/README.md](references/msp/README.md) —— **MSP 协议标准**（对象/操作/副作用/不变量/事件/符合性判定的总览，先读它决定深入哪一篇）
 - [references/msp/spec.md](references/msp/spec.md) —— 协议正文（对象模型、状态机、操作定义、30 条全局不变量）
 - [references/msp/ledger.md](references/msp/ledger.md) —— **积分账本规范**（唯一事实来源 / 只追加 / 结构化幂等键 / 原子扣减 / 对账）
-- [references/msp/conformance.md](references/msp/conformance.md) —— 符合性等级、MUST 清单、50 条测试向量与判定规则
+- [references/msp/conformance.md](references/msp/conformance.md) —— 符合性等级、MUST 清单、54 条测试向量与判定规则
 - [references/msp/events.md](references/msp/events.md) —— 事件信封与必需事件契约
 - [references/msp/extensions.md](references/msp/extensions.md) —— 扩展机制与兼容规则
 - [references/msp/prior-art.md](references/msp/prior-art.md) —— **成熟先例映射**（Stripe / Lago / Kill Bill / CloudEvents / IETF 幂等草案）与差分声明要求
