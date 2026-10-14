@@ -2,7 +2,7 @@
 
 > 执行本技能时的**第一步必读**。回答：agent 该问什么、按什么档位选方案、怎么给用户讲清理由。
 > 原则：**先访谈（目的 × 规模 × 硬约束），再选档，理由必须写进产出；禁止静默默认。**
-> 本访谈模式是平台技能族的通用前置——`logging-system-builder`、未来的 `identity-system-builder`
+> 本访谈模式是平台技能族的通用前置——`logging-system-builder`、`identity-system-builder`
 > 同样按「访谈 → 档位 → 理由」执行。
 
 ## 1. 访谈（一次问清，≤3 个问题）
@@ -68,4 +68,4 @@
 - 到账确认四层（金额指纹/截图审核/聚合/官方）：`payment-confirmation.md`——档位决定默认层；
 - 内核闭环与插件注入（L3）：`plugin-architecture.md`；
 - 合规（发票/争议/数据保留）：`msp/spec.md` §8、`data-retention.md`；
-- 身份层拆分边界（认证/授权/权益三分离）：SKILL.md 不可妥协项 12 与 `identity-system-builder`（规划中）。
+- 身份层拆分边界（认证/授权/权益三分离）：SKILL.md 不可妥协项 12 与 `identity-system-builder`（已独立为技能，认证档位 I0~I3）。

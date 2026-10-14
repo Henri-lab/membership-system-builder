@@ -51,6 +51,7 @@ description: 为「会员订阅 + 付费内容 + 支付」业务完成选型并�
 | 插件形态 | `inprocess_registry` / `separate_process` | `inprocess_registry` |
 
 `reuse_existing`（改造已有项目）时：先读现有代码与数据库，产出**改造计划**而不是重写计划；把哪些表/模块复用、哪些新增讲清楚。
+`standalone` 的注册/登录/会话/密码重置按 **identity-system-builder（ASP 协议）** 实现；本技能只消费其签发的 `principal`。
 新增分支默认取最小实现；选中的分支必须产出与成熟参考（`prior-art.md`）的**差分声明**。
 
 ## 第二步：按分支读取参考
