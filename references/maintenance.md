@@ -118,6 +118,7 @@ platform-kit/skills/membership-system-builder/   # vendored 副本（只随上�
 | v0.4.16 | 2026-10-11 | 新增 `references/reminder-contract.md`（提醒语义分层 / 窗口幂等键 / 渠道降级 / 退订隔离 / 失败重试）；spec 新增 INV-35；events 新增 `reminder.sent/skipped`；data-model 扩展提醒表；conformance 新增 T-61/T-62；新增 L-064 |
 | v0.4.17 | 2026-10-11 | 新增 `references/account-merge.md`（合并语义：段并集 / 账本 transfer / 不可逆）；spec 新增 §4.8 OP-M2 与 INV-36；events 新增 `account.merged`；data-model 新增 `account_merges`；conformance 新增 T-63/T-64；新增 L-065 |
 | v0.5.0 | 2026-10-11 | **MSP 升至 v0.4.0**（第二梯队收尾）：请求侧节流、人工转账回执、数据保留与删除、续费提醒契约、账户合并（INV-31~36、OP-R3/M2、T-55~64）；SKILL.md 不可妥协项 12 条；README 候选收敛（剩余：埋点与画像）；prior-art 补行 |
+| v0.5.1 | 2026-10-14 | 新增 `references/solution-tiers.md`（选型访谈：目的×规模×硬约束 / 档位矩阵 L0~L3 / 换档触发器 / 理由模板）；SKILL.md 第一步改为「必做访谈 → 按档位落分支」，禁止静默默认；始终读取与产出物要求同步；新增 L-066 |
 
 ## 8. 自检清单（每次改完技能跑一遍）
 
