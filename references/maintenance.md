@@ -120,6 +120,7 @@ platform-kit/skills/membership-system-builder/   # vendored 副本（只随上�
 | v0.5.0 | 2026-10-11 | **MSP 升至 v0.4.0**（第二梯队收尾）：请求侧节流、人工转账回执、数据保留与删除、续费提醒契约、账户合并（INV-31~36、OP-R3/M2、T-55~64）；SKILL.md 不可妥协项 12 条；README 候选收敛（剩余：埋点与画像）；prior-art 补行 |
 | v0.5.1 | 2026-10-14 | 新增 `references/solution-tiers.md`（选型访谈：目的×规模×硬约束 / 档位矩阵 L0~L3 / 换档触发器 / 理由模板）；SKILL.md 第一步改为「必做访谈 → 按档位落分支」，禁止静默默认；始终读取与产出物要求同步；新增 L-066 |
 | v0.5.2 | 2026-10-14 | MSP spec §1 新增「身份边界」声明（principal 由 ASP 签发、业务层不自造）；认证独立为 identity-system-builder（ASP v0.1.0）；solution-tiers 与 SKILL.md 账号体系分支接线；新增 L-067 |
+| v0.5.3 | 2026-10-17 | 课程站 bug-log 复盘回填：新增 L-068（跨模块状态机一起收口：订单关闭显式释放支付单与金额占用） |
 
 ## 8. 自检清单（每次改完技能跑一遍）
 
