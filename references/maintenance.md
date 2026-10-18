@@ -127,6 +127,7 @@ platform-kit/skills/membership-system-builder/   # vendored 副本（只随上�
 | v0.5.7 | 2026-10-18 | outbox.md 补「同库独立表是硬约束」（事务边界/独立表理由/每服务一张/CDC 混合例外）+ schema version/按月分区/最老 pending age 告警/graceful drain + 反模式 9/10；新增 L-072 |
 | v0.5.8 | 2026-10-18 | outbox.md 新增 §13 拓扑与角色（四角色失败域 / 直连 vs 经 MQ 两种形态 / 信封端到端 / aggregate_id 分区键 / microservices.io·MassTransit·Watermill 对照）；prior-art 补行；新增 L-073 |
 | v0.5.9 | 2026-10-18 | outbox.md 新增 §13.1（relay 双重身份 / outbox 与 MQ 接力分工表 / 直连代价四条 / 消费者直扫 outbox 的中间玩法 / 一句话分流）；L-073 补充 |
+| v0.5.10 | 2026-10-18 | 技术选型第二层访谈上线：新增 `references/stack-selection.md`（档位→技术栈映射 + 委托表）；SKILL.md 登记并更新产出物要求；规则唯一权威在 agent-skills-index conventions/stack-interview.md；新增 L-074 |
 
 ## 8. 自检清单（每次改完技能跑一遍）
 
