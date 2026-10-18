@@ -116,6 +116,7 @@
 
 > 前三个与 [design-judgment.md](design-judgment.md) 的「三个杀手测试」同源；这里补出处，并新增并发、回滚两个。
 > 这五条已升格为验收规则：[msp/conformance.md](msp/conformance.md) §3 的 D-1~D-5，任何实现都必须通过且不可豁免。
+> 操作化定义（必检问题/各域表述/通过证据）的唯一权威在 quality-gate-builder 的 design-judgments.md；本文只保留出处溯源。
 
 | # | 测试 | 一句话 | 命中哪条判据 |
 | --- | --- | --- | --- |
