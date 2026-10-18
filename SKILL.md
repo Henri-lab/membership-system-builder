@@ -65,6 +65,7 @@ description: 为「会员订阅 + 付费内容 + 支付」业务完成选型并�
 - [references/msp/ledger.md](references/msp/ledger.md) —— **积分账本规范**（唯一事实来源 / 只追加 / 结构化幂等键 / 原子扣减 / 对账）
 - [references/msp/conformance.md](references/msp/conformance.md) —— 符合性等级、MUST 清单、54 条测试向量与判定规则
 - [references/msp/events.md](references/msp/events.md) —— 事件信封与必需事件契约
+- [references/outbox.md](references/outbox.md) —— **Outbox 实现机制**（Go+Postgres 参考实现 / 领取与退避 / 死信闭环 / 吞吐与观测）
 - [references/msp/extensions.md](references/msp/extensions.md) —— 扩展机制与兼容规则
 - [references/msp/prior-art.md](references/msp/prior-art.md) —— **成熟先例映射**（Stripe / Lago / Kill Bill / CloudEvents / IETF 幂等草案）与差分声明要求
 - [references/data-retention.md](references/data-retention.md) —— **数据保留与删除**（三类数据 / 保留期 / 删除权与只追加账本的共存规则）
