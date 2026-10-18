@@ -138,3 +138,4 @@ platform-kit/skills/membership-system-builder/   # vendored 副本（只随上�
 5. 新增条目遵守格式、已去重、未包含机密；
 6. 工作区副本已同步到 `~/.codex/skills/`。
 7. 新增原则/概念前查 agent-skills-index 的 `concept-map.md`：已有则引用不复制，新概念先登记权威位置。
+8. 决策回填与提升规则见 agent-skills-index 的 `conventions/knowledge-evolution.md`（证据等级：真实反例 > 推理）。
