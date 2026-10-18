@@ -131,3 +131,4 @@ platform-kit/skills/membership-system-builder/   # vendored 副本（只随上�
 4. `agents/openai.yaml` 的 `short_description` 在 25~64 字符之间；
 5. 新增条目遵守格式、已去重、未包含机密；
 6. 工作区副本已同步到 `~/.codex/skills/`。
+7. 新增原则/概念前查 agent-skills-index 的 `concept-map.md`：已有则引用不复制，新概念先登记权威位置。
