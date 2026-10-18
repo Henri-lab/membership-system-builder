@@ -121,6 +121,7 @@ platform-kit/skills/membership-system-builder/   # vendored 副本（只随上�
 | v0.5.1 | 2026-10-14 | 新增 `references/solution-tiers.md`（选型访谈：目的×规模×硬约束 / 档位矩阵 L0~L3 / 换档触发器 / 理由模板）；SKILL.md 第一步改为「必做访谈 → 按档位落分支」，禁止静默默认；始终读取与产出物要求同步；新增 L-066 |
 | v0.5.2 | 2026-10-14 | MSP spec §1 新增「身份边界」声明（principal 由 ASP 签发、业务层不自造）；认证独立为 identity-system-builder（ASP v0.1.0）；solution-tiers 与 SKILL.md 账号体系分支接线；新增 L-067 |
 | v0.5.3 | 2026-10-17 | 课程站 bug-log 复盘回填：新增 L-068（跨模块状态机一起收口：订单关闭显式释放支付单与金额占用） |
+| v0.5.4 | 2026-10-18 | MSP 升至 v0.4.1：spec 新增 §10 幂等键规范（键随重复源/原子占位与结果回放/幂等≠业务唯一性/状态机条件更新/全操作防重地图/常见坑）；conformance 新增 T-65/T-66 与 MUST 项；新增 L-069 |
 
 ## 8. 自检清单（每次改完技能跑一遍）
 

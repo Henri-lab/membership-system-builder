@@ -7,7 +7,7 @@
 
 <p align="center">
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-blue.svg"></a>
-  <img alt="MSP v0.3.0" src="https://img.shields.io/badge/protocol-MSP%20v0.3.0-blueviolet">
+  <img alt="MSP v0.4.1" src="https://img.shields.io/badge/protocol-MSP%20v0.4.1-blueviolet">
   <img alt="Conformance" src="https://img.shields.io/badge/conformance-T01--T64_%2B_D1--D5-success">
   <img alt="Version" src="https://img.shields.io/badge/version-v0.5.0-informational">
   <img alt="Validate" src="https://github.com/Henri-lab/membership-system-builder/actions/workflows/validate.yml/badge.svg">

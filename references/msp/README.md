@@ -1,8 +1,8 @@
 # MSP：会员订阅支付协议标准（Membership & Subscription Protocol）
 
-> 版本：v0.4.0（2026-10-11）｜性质：**规范性协议**（normative），不是某个语言的实现模板。
+> 版本：v0.4.1（2026-10-18）｜性质：**规范性协议**（normative），不是某个语言的实现模板。
 > 作者：henrifox｜上游：<https://github.com/Henri-lab/membership-system-builder>｜许可：MIT（见仓库 LICENSE）
-> 引用本协议请注明：MSP v0.4.0 + 作者 + 上游仓库地址（引用格式见仓库 README「起源与署名」）。
+> 引用本协议请注明：MSP v0.4.1 + 作者 + 上游仓库地址（引用格式见仓库 README「起源与署名」）。
 
 ## 这是什么
 
