@@ -12,11 +12,8 @@
   `amount = { currency, minor_units }`，`currency` 为 ISO-4217 三字母。
 - **时间**：所有持久化时间戳必须为 UTC；一切过期/时间窗判断以**服务端时间**为准，禁止信任调用方时间。
 - **幂等键**：所有改变状态的操作（用户/管理员/内部回调）必须接受 `idempotency_key`
-  （或天然唯一的业务键，如 `order_ref`、`payment_ref`）。同一键重复调用必须返回**相同结果**且不得重复产生副作用。
-  语义对齐 IETF《The Idempotency-Key HTTP Header Field》（draft-ietf-httpapi-idempotency-key-header）：
-  key 与请求体绑定（同 key 不同 payload 必须拒绝）、原请求仍在处理中的重试应当返回可重试错误
-  （HTTP 层面为 409）、实现应当声明 key 的保留期并可清理过期 key。协议不强制 HTTP；
-  绑定到 HTTP 时使用 `Idempotency-Key` 头。
+  （或天然唯一业务键）。同一键重复调用必须返回**相同结果**且不得重复产生副作用。
+  完整机制（键随重复源、原子占位与结果回放、幂等≠业务唯一性、防重地图）见 **§10 幂等键规范**，此处不重复。
 - **扩展字段**：对象可携带 `meta`（键值映射）。扩展只能**新增** `meta` 字段、类型枚举值与事件类型，禁止改变既有字段语义。
 - **资源门控**：任何受保护资源必须可被 `resource_ref` 唯一标识，用于访问检查（见 OP-E1）。
 
@@ -564,6 +561,9 @@ Dispute: opened → needs_response → under_review → won | lost
 
 ### 10.1 键的来源必须与重复的来源匹配
 
+> 语义对齐 IETF《The Idempotency-Key HTTP Header Field》（draft-ietf-httpapi-idempotency-key-header）；
+> 协议不强制 HTTP，绑定到 HTTP 时使用 `Idempotency-Key` 头。
+
 | 重复来源 | 键 | 规则 |
 | --- | --- | --- |
 | 用户双击 / 网络重试 | 客户端意图键 `(principal, client_request_id)` | 客户端在**意图产生时**生成一次 UUID，整条重试链复用；每次重试换新键 = 防了个寂寞 |
@@ -578,7 +578,8 @@ Dispute: opened → needs_response → under_review → won | lost
 - 幂等记录存"键 → 处理结果"映射：状态 `processing / done / failed`，`done` 时保存**首次结果**（含响应体）；
 - 重复到达的行为：`done` → 返回首次结果（不是报"已存在"）；`processing` → 返回可重试错误（HTTP 409）或等待；
   `failed` → 按实现声明重试或返回失败；
-- 同键不同 payload 必须拒绝：记录 `request_hash` 并比对（§1 幂等键条款的 IETF 语义）。
+- 同键不同 payload 必须拒绝：记录 `request_hash` 并比对；原请求仍在处理中的重试返回可重试错误
+  （HTTP 409）；实现应声明 key 保留期并可清理过期 key（IETF 语义）。
 
 ### 10.3 幂等 ≠ 业务唯一性
 
