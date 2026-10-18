@@ -123,6 +123,7 @@ platform-kit/skills/membership-system-builder/   # vendored 副本（只随上�
 | v0.5.3 | 2026-10-17 | 课程站 bug-log 复盘回填：新增 L-068（跨模块状态机一起收口：订单关闭显式释放支付单与金额占用） |
 | v0.5.4 | 2026-10-18 | MSP 升至 v0.4.1：spec 新增 §10 幂等键规范（键随重复源/原子占位与结果回放/幂等≠业务唯一性/状态机条件更新/全操作防重地图/常见坑）；conformance 新增 T-65/T-66 与 MUST 项；新增 L-069 |
 | v0.5.5 | 2026-10-18 | 新增 `references/outbox.md`（Outbox 实现机制唯一权威：三板斧/领取与退避/死信闭环/吞吐与延迟/消费端幂等/观测/测试/升级信号）；SKILL.md 与 msp/README 登记；spec INV-18 加指针；新增 L-070 |
+| v0.5.6 | 2026-10-18 | spec §10.1 补客户端意图键生命周期（idle/in-flight/换新 + 会话级存储 + 服务端作用域与保留期 + 业务相似单检测边界）；新增 L-071；工程坑 E-114 进 engineering-pitfalls |
 
 ## 8. 自检清单（每次改完技能跑一遍）
 
