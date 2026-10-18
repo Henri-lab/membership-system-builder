@@ -66,24 +66,20 @@
 
 ## 7. 同步与版本
 
-**唯一上游：独立开源仓库 [Henri-lab/membership-system-builder](https://github.com/Henri-lab/membership-system-builder)**（2026-10-11 自 `platform-kit` 独立）。
+**唯一上游：独立开源仓库 [Henri-lab/membership-system-builder](https://github.com/Henri-lab/membership-system-builder)**。
 
-三个位置的关系与同步方向（**上游 → 下游，单向**）：
+两个位置的关系与同步方向（**上游 → 下游，单向**）：
 
 ```
 Henri-lab/membership-system-builder/             # 源（唯一上游，git 版本化）
-        │  rsync -a --delete（同步后在 platform-kit 提交 vendored 副本）
-        ▼
-platform-kit/skills/membership-system-builder/   # vendored 副本（只随上游同步，禁止直接改）
         │  rsync -a --delete
         ▼
 ~/.codex/skills/membership-system-builder/       # 安装副本（agent 实际加载的）
 ```
 
-- 改动流程：改上游 → 提交并 push → 同步 vendored 副本
-  （`rsync -a --delete <上游>/ <platform-kit>/skills/membership-system-builder/`）并在 platform-kit 提交 →
-  同步安装副本（`rsync -a --delete <上游>/ ~/.codex/skills/membership-system-builder/`）；
-- **不要在任何副本上直接编辑**（vendored / 安装副本 / 项目工作区临时副本），否则会出现多版本漂移；
+- 改动流程：改上游 → 提交并 push → 同步安装副本
+  （`rsync -a --delete <上游>/ ~/.codex/skills/membership-system-builder/`）；
+- **不要在任何副本上直接编辑**（安装副本 / 项目工作区临时副本），否则会出现多版本漂移；
 - 每次结构变化写一条变更记录：
 
 | 版本 | 日期 | 变更 |
@@ -128,6 +124,7 @@ platform-kit/skills/membership-system-builder/   # vendored 副本（只随上�
 | v0.5.8 | 2026-10-18 | outbox.md 新增 §13 拓扑与角色（四角色失败域 / 直连 vs 经 MQ 两种形态 / 信封端到端 / aggregate_id 分区键 / microservices.io·MassTransit·Watermill 对照）；prior-art 补行；新增 L-073 |
 | v0.5.9 | 2026-10-18 | outbox.md 新增 §13.1（relay 双重身份 / outbox 与 MQ 接力分工表 / 直连代价四条 / 消费者直扫 outbox 的中间玩法 / 一句话分流）；L-073 补充 |
 | v0.5.10 | 2026-10-18 | 技术选型第二层访谈上线：新增 `references/stack-selection.md`（档位→技术栈映射 + 委托表）；SKILL.md 登记并更新产出物要求；规则唯一权威在 agent-skills-index conventions/stack-interview.md；新增 L-074 |
+| v0.5.11 | 2026-10-18 | platform-kit 回归纯代码模块：§7 同步链去掉 vendored 一环，上游直达安装副本 |
 
 ## 8. 自检清单（每次改完技能跑一遍）
 
