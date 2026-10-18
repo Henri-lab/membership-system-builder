@@ -388,4 +388,4 @@
 ### L-073 outbox 拓扑的四角色各管一段失败域；模块化单体里"邮局"可选
 - 日期：2026-10-18｜来源：设计推理（拓扑角色整理 + microservices.io/MassTransit 先例）｜分支：任意
 - 结论：生产者→relay→MQ→消费者的四角色，价值在"失败域各管一段"（relay 挂=积压不丢、MQ 挂=退避重试、消费者挂=重投）；但 MQ 不是必需品——模块化单体默认直连分发，四角色塌缩成两个。
-- 为什么＋落地：补进 `references/outbox.md` §13（两种投递形态 + 信封端到端不变 + aggregate_id 分区键 + 开源对照）；prior-art 补 MassTransit/NServiceBus/Watermill。
+- 为什么＋落地：补进 `references/outbox.md` §13（两种投递形态 + 信封端到端不变 + aggregate_id 分区键 + 开源对照）；prior-art 补 MassTransit/NServiceBus/Watermill。§13.1 再补：relay 双重身份（对 outbox 是消费者、对 MQ 是生产者）、outbox vs MQ 接力分工表、直连代价四条、消费者直扫 outbox 表的中间玩法与一句话分流。
