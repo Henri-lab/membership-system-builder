@@ -14,7 +14,7 @@
 | 积分钱包 | **Lago Wallets**（`paid_credits/granted_credits` = 面值/赠送，wallet transactions = 流水） | 入账/消耗/退款事务语义、余额告警、自动充值 |
 | 账本"唯一事实来源 + 只追加" | 银行流水；Stripe Balance Transactions；复式记账 | 积分用单式（ledger.md 策略 A/B）；资金可选复式（策略 C） |
 | `balance_after` | 银行对账单 running balance | 物化优化，不变量仍以 `Σ delta` 为准 |
-| 事务性发箱 + 至少一次 + 幂等消费 | **Transactional Outbox**（microservices.io）；inbox pattern | 事件与业务同事务；消费者按事件 id 去重 |
+| 事务性发箱 + 至少一次 + 幂等消费 | **Transactional Outbox**（Chris Richardson, microservices.io）；inbox pattern；MassTransit / NServiceBus（.NET 一体实现）；Watermill（Go SQL publisher） | 事件与业务同事务；消费者按事件 id 去重；relay→MQ 拓扑与两种投递形态见 [../outbox.md](../outbox.md) §13 |
 | 事件信封 | **CloudEvents v1.0**（CNCF，cloudevents.io） | 信封为其受限子集；`(id, source)` 唯一 ↔ 账本 `(source_event_id, ref)` 复合键 |
 | `idempotency_key` | Stripe `Idempotency-Key`；IETF draft-ietf-httpapi-idempotency-key-header | key 与请求体绑定、处理中重试 409、key 保留期 |
 | 金额整数最小单位 | Stripe 金额惯例；Fowler《PoEAA》Money 模式 | 持久化与运算只用整数分；算术封装在 Money 类型 |

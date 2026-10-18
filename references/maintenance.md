@@ -125,6 +125,7 @@ platform-kit/skills/membership-system-builder/   # vendored 副本（只随上�
 | v0.5.5 | 2026-10-18 | 新增 `references/outbox.md`（Outbox 实现机制唯一权威：三板斧/领取与退避/死信闭环/吞吐与延迟/消费端幂等/观测/测试/升级信号）；SKILL.md 与 msp/README 登记；spec INV-18 加指针；新增 L-070 |
 | v0.5.6 | 2026-10-18 | spec §10.1 补客户端意图键生命周期（idle/in-flight/换新 + 会话级存储 + 服务端作用域与保留期 + 业务相似单检测边界）；新增 L-071；工程坑 E-114 进 engineering-pitfalls |
 | v0.5.7 | 2026-10-18 | outbox.md 补「同库独立表是硬约束」（事务边界/独立表理由/每服务一张/CDC 混合例外）+ schema version/按月分区/最老 pending age 告警/graceful drain + 反模式 9/10；新增 L-072 |
+| v0.5.8 | 2026-10-18 | outbox.md 新增 §13 拓扑与角色（四角色失败域 / 直连 vs 经 MQ 两种形态 / 信封端到端 / aggregate_id 分区键 / microservices.io·MassTransit·Watermill 对照）；prior-art 补行；新增 L-073 |
 
 ## 8. 自检清单（每次改完技能跑一遍）
 

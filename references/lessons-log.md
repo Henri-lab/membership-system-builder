@@ -384,3 +384,8 @@
 - 日期：2026-10-18｜来源：设计推理（outbox 结构约束补全）｜分支：任意
 - 结论：outbox 必须是与业务表**同库**的**独立表**——同库才有本地 ACID 事务（放 Redis/Kafka 就重新无解），独立表才能承载"一变迁多事件/多消费者进度/高频扫描隔离/独立演进"；每限界上下文一张，不跨库共用。
 - 为什么＋落地：补进 `references/outbox.md` §2（含 CDC 混合例外）；表设计补 schema version、按月分区归档、id 双职责；观测补"最老 pending age"告警；反模式补 9/10（跨库、多服务共用一张）。
+
+### L-073 outbox 拓扑的四角色各管一段失败域；模块化单体里"邮局"可选
+- 日期：2026-10-18｜来源：设计推理（拓扑角色整理 + microservices.io/MassTransit 先例）｜分支：任意
+- 结论：生产者→relay→MQ→消费者的四角色，价值在"失败域各管一段"（relay 挂=积压不丢、MQ 挂=退避重试、消费者挂=重投）；但 MQ 不是必需品——模块化单体默认直连分发，四角色塌缩成两个。
+- 为什么＋落地：补进 `references/outbox.md` §13（两种投递形态 + 信封端到端不变 + aggregate_id 分区键 + 开源对照）；prior-art 补 MassTransit/NServiceBus/Watermill。

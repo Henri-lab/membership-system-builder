@@ -142,3 +142,39 @@ outbox 的 `id` 就是消费端幂等键；业务效果幂等仍以业务键为�
 | 所有表变更都要捕获、业务方不肯写 outbox | Debezium CDC（代价：Kafka Connect 运维面，后置） |
 
 默认**自研这套**（核心约 100 行）足以覆盖 90% 场景，不要提前引入 MQ（对齐 lessons-log L-002）。
+
+## 13. 拓扑与角色：生产者 → relay → MQ → 消费者
+
+```
+业务服务               relay                 MQ              下游服务
+(事实生产者)          (投递员/搬运工)        (邮局)          (消费者)
+  ├─ 写业务表+outbox
+  │  （同一事务）
+  │                  ├─ 读 outbox（SKIP LOCKED）
+  │                  ├─ publish ────────→ ├─ 投递 ────────→ ├─ 消费（inbox 幂等）
+```
+
+四角色的**失败域各管一段**，这也是拓扑的价值：
+
+| 角色 | 挂了会怎样 | 恢复后 |
+| --- | --- | --- |
+| 业务服务 | 无新事实产生 | 无需动作（事实没写 = 事件没写，同事务） |
+| relay | outbox 只积压、不丢 | SKIP LOCKED 继续捞，积压自然消化 |
+| MQ | publish 失败进入 retry_count 退避 | 重试成功 |
+| 消费者 | MQ 保留/重投；直连模式下 outbox 不确认 | 幂等消费（inbox）继续 |
+
+**两种投递形态**：
+
+- **直连（模块化单体默认）**：relay 直接调用进程内/同库的下游处理器——四角色塌缩成两个
+  （生产者 + 分发器），不需要"邮局"；课程站的 `workers.go` 就是这个形态；
+- **经 MQ（跨进程）**：出现 §12 的升级信号（每秒上千 / 跨机房 / 多团队独立消费）才引入；
+  outbox 仍是事实源，relay 只是搬运工。
+
+工程要点：
+
+- **信封端到端不变**：无论走直连还是 MQ，消费者看到的是同一 CloudEvents 信封，
+  不该感知"上一跳是 relay 还是 MQ"；
+- **per-aggregate 顺序**：经 MQ 时用 `aggregate_id` 做分区键（Kafka key），单分区内保序；
+- **开源对照**：该模式源自 Chris Richardson《microservices.io》的 Transactional Outbox；
+  .NET 生态的 MassTransit / NServiceBus 把 outbox + inbox 做成了一体默认（值得作为先例对表）；
+  Go 的 Watermill 自带 SQL outbox publisher（见 §12）。
