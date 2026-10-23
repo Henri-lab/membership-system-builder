@@ -404,3 +404,8 @@
 - 日期：2026-10-19｜来源：真实项目（课程站 renewal 模块）｜分支：inapp_reminder
 - 结论：续费提醒不能先永久占去重键再执行后续动作。正确顺序是：先幂等生成待支付续费订单，再把“占提醒窗口 + 写通知”放进同一事务；窗口键含 `window_start`。
 - 为什么＋落地：先占坑会让续费造单/通知失败后永久丢提醒；无窗口键会让同一权益下一年不再提醒。课程站以 `(entitlement_id, template_key, window_start)` 唯一键和并发集成测试锁住该行为。
+
+### L-077 显式状态机边表是“可读性层”，不是数据库裁判的替代品
+- 日期：2026-10-23｜来源：真实项目（course-platform/platform-kit v0.7.2）｜分支：Core / 任意
+- 结论：把 `From[] × Action → To + Event + Guard` 集中成边表，能统一状态/动作/事件名并让每条格子可枚举；但数据库 CHECK + `UPDATE ... WHERE status=旧值` 仍必须保留，独占“并发裁判”职责。
+- 为什么＋落地：边表负责 fail-fast 与可读性，数据库负责原子性与唯一裁决；两者是双源，必须同批更新迁移、边表、边测试、流程/状态机文档。课程站已显式化 payment/refund/claim/provision/shipment/redemption 六台机器，并登记“DB 保留 cancelled 枚举但当前取消走 expired”的偏差。
